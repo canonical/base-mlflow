@@ -4,10 +4,9 @@ WORKDIR /app
 
 ADD . /app
 
-RUN apt-get -y update && apt-get -y install git
 RUN apt-get update && \
     # install prequired modules to support install of mlflow and related components
-    apt-get install -y default-libmysqlclient-dev build-essential curl openjdk-11-jre-headless \
+    apt-get install -y default-libmysqlclient-dev build-essential curl openjdk-11-jre-headless git \
     # cmake and protobuf-compiler required for onnx install
     cmake protobuf-compiler &&  \
     # install required python packages

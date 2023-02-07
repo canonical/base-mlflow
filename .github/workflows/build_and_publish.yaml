@@ -14,7 +14,7 @@ jobs:
       id-token: write
       contents: write
       security-events: write
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -38,18 +38,18 @@ jobs:
       - name: Build Docker image
         run: |
           cd upstream
-          docker build -t ${{ secrets.DOCKER_HUB_IMAGE }}:latest .
+          docker build -t ${{ secrets.DOCKER_HUB_IMAGE }}:${{ github.sha }} .
       
       - name: Run image tests
         run: |
-          docker run --rm -it -p 5000:5000 -d ${{ secrets.DOCKER_HUB_IMAGE }}:latest mlflow server --host 0.0.0.0
+          docker run --rm -it -p 5000:5000 -d ${{ secrets.DOCKER_HUB_IMAGE }}:${{ github.sha }} mlflow server --host 0.0.0.0
           sleep 5
           curl -I --fail localhost:5000
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ secrets.DOCKER_HUB_IMAGE }}:latest'
+          image-ref: '${{ secrets.DOCKER_HUB_IMAGE }}:${{ github.sha }}'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -69,7 +69,5 @@ jobs:
       
       - name: Docker push image to DockerHub
         run: |
+          docker tag ${{ secrets.DOCKER_HUB_IMAGE }}:${{ github.sha }} ${{ secrets.DOCKER_HUB_IMAGE }}:latest
           docker push ${{ secrets.DOCKER_HUB_IMAGE }}:latest
-      
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3

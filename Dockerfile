@@ -1,25 +1,11 @@
-FROM charmed/base-2204-python38:latest
+FROM ubuntu:22.04
+ARG VERSION
 
-WORKDIR /app
+RUN apt update && apt install -y \
+    python3.10 \
+    python3-pip && \
+    pip install --no-cache mlflow==$VERSION && \
+    apt autoremove -yqq --purge && \
+    apt clean
 
-ADD . /app
-
-RUN apt-get update && \
-    # install prequired modules to support install of mlflow and related components
-    apt-get install -y default-libmysqlclient-dev build-essential curl openjdk-11-jre-headless git \
-    # cmake and protobuf-compiler required for onnx install
-    cmake protobuf-compiler &&  \
-    # install required python packages
-    pip install -r requirements/dev-requirements.txt --no-cache-dir && \
-    # install mlflow in editable form
-    pip install --no-cache-dir -e .
-
-# Build MLflow UI
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get update && apt-get install -y nodejs && \
-    npm install --global yarn && \
-    cd mlflow/server/js && \
-    yarn install && \
-    yarn build
-
-CMD ["bash"]
+CMD ["python3"]

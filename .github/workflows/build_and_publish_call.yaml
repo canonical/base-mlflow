@@ -1,12 +1,7 @@
 name: Build and Publish
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-  schedule:
-    - cron: "0 14 * * 1"
-  workflow_dispatch:
+  workflow_call:
     inputs:
       ubuntu-version:
         description: "Ubuntu version for the base image"
@@ -22,6 +17,11 @@ on:
         description: "Current image version for given MLflow and Ubuntu versions"
         default: "1.0"
         type: string
+        required: true
+    secrets:
+      DOCKER_HUB_CHARMED_USERNAME:
+        required: true
+      DOCKER_HUB_CHARMED_ACCESS_TOKEN:
         required: true
 
 jobs:

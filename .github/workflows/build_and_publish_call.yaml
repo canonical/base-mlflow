@@ -65,7 +65,7 @@ jobs:
       
       - name: Build Docker image
         run: |
-          docker build -t ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ github.sha }} --build-arg VERSION=${{ inputs.mlflow-version }} --build-arg UBUNTU_IMAGE=ubuntu:${{ inputs.ubuntu-version }} .
+          docker build -t ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ github.sha }} --build-arg VERSION=${{ inputs.mlflow-version }} --build-arg UBUNTU_VERSION=${{ inputs.ubuntu-version }} .
       
       - name: Run image tests
         run: |

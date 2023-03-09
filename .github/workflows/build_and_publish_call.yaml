@@ -1,11 +1,40 @@
 name: Build and Publish
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-  schedule:
-    - cron: "0 14 * * 1"
+  workflow_dispatch:
+    inputs:
+      mlflow-version:
+        description: "MLflow pip library version to use during build of the image"
+        default: "2.1.1"
+        type: string
+        required: false
+      version:
+        description: "Current image version for given MLflow and Ubuntu versions"
+        default: "1.0"
+        type: string
+        required: false
+    secrets:
+      DOCKER_HUB_CHARMED_USERNAME:
+        required: true
+      DOCKER_HUB_CHARMED_ACCESS_TOKEN:
+        required: true
+  workflow_call:
+    inputs:
+      mlflow-version:
+        description: "MLflow pip library version to use during build of the image"
+        default: "2.1.1"
+        type: string
+        required: false
+      version:
+        description: "Current image version for given MLflow and Ubuntu versions"
+        default: "1.0"
+        type: string
+        required: false
+    secrets:
+      DOCKER_HUB_CHARMED_USERNAME:
+        required: true
+      DOCKER_HUB_CHARMED_ACCESS_TOKEN:
+        required: true
 
 jobs:
   build-and-push-docker-image:
@@ -14,7 +43,7 @@ jobs:
       id-token: write
       contents: write
       security-events: write
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout code
@@ -26,7 +55,7 @@ jobs:
       
       - name: Build Docker image
         run: |
-          docker build -t ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ github.sha }} --build-arg VERSION=${{ vars.MLFLOW_VERSION }} .
+          docker build -t ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ github.sha }} --build-arg VERSION=${{ inputs.mlflow-version }} .
       
       - name: Run image tests
         run: |
@@ -56,5 +85,5 @@ jobs:
       
       - name: Docker push image to DockerHub
         run: |
-          docker tag ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ github.sha }} ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:latest
-          docker push ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:latest
+          docker tag ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ github.sha }} ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ inputs.mlflow-version }}_${{ inputs.version }}-22.04
+          docker push ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ inputs.mlflow-version }}_${{ inputs.version }}-22.04

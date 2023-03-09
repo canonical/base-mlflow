@@ -7,12 +7,12 @@ on:
         description: "Ubuntu version for the base image"
         default: "22.04"
         type: string
-        required: true
+        required: false
       mlflow-version:
         description: "MLflow pip library version to use during build of the image"
         default: "2.1.1"
         type: string
-        required: true
+        required: false
       version:
         description: "Current image version for given MLflow and Ubuntu versions"
         default: "1.0"

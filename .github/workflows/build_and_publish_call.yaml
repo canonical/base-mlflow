@@ -20,11 +20,6 @@ on:
         required: true
   workflow_call:
     inputs:
-      ubuntu-version:
-        description: "Ubuntu version for the base image"
-        default: "22.04"
-        type: string
-        required: false
       mlflow-version:
         description: "MLflow pip library version to use during build of the image"
         default: "2.1.1"

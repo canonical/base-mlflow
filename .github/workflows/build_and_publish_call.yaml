@@ -17,7 +17,7 @@ on:
         description: "Current image version for given MLflow and Ubuntu versions"
         default: "1.0"
         type: string
-        required: true
+        required: false
     secrets:
       DOCKER_HUB_CHARMED_USERNAME:
         required: true

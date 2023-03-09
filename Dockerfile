@@ -1,5 +1,4 @@
-ARG UBUNTU_VERSION
-FROM ubuntu:$UBUNTU_VERSION
+FROM ubuntu:22.04
 ARG VERSION
 
 RUN apt update && apt install -y \

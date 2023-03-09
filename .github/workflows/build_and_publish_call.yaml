@@ -1,6 +1,28 @@
 name: Build and Publish
 
 on:
+  workflow_dispatch:
+    inputs:
+      ubuntu-version:
+        description: "Ubuntu version for the base image"
+        default: "22.04"
+        type: string
+        required: false
+      mlflow-version:
+        description: "MLflow pip library version to use during build of the image"
+        default: "2.1.1"
+        type: string
+        required: false
+      version:
+        description: "Current image version for given MLflow and Ubuntu versions"
+        default: "1.0"
+        type: string
+        required: false
+    secrets:
+      DOCKER_HUB_CHARMED_USERNAME:
+        required: true
+      DOCKER_HUB_CHARMED_ACCESS_TOKEN:
+        required: true
   workflow_call:
     inputs:
       ubuntu-version:
@@ -43,7 +65,7 @@ jobs:
       
       - name: Build Docker image
         run: |
-          docker build -t ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ github.sha }} --build-arg VERSION=${{ inputs.mlflow-version }} --build-arg UBUNTU_VERSION=${{ inputs.ubuntu-version }} .
+          docker build -t ${{ vars.DOCKER_HUB_CHARMED_IMAGE }}:${{ github.sha }} --build-arg VERSION=${{ inputs.mlflow-version }} --build-arg UBUNTU_IMAGE=ubuntu:${{ inputs.ubuntu-version }} .
       
       - name: Run image tests
         run: |

@@ -7,7 +7,7 @@ RUN set -eux; \
 # install python
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get full-upgrade -y; \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends; \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     python3.10 \
     python3-pip \
     tzdata; \

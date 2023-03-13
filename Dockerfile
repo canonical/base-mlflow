@@ -15,6 +15,7 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*; \
     # install mlflow
     pip install --no-cache mlflow==$VERSION
+# to stay consistent with upstream image we separate the dpkg-query to separate layer
 RUN mkdir -p /usr/share/rocks; \
     (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && dpkg-query -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) > /usr/share/rocks/dpkg.query
 

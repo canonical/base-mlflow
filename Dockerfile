@@ -4,7 +4,7 @@ ARG VERSION
 ENV TZ=UTC
 
 RUN set -eux; \
-# install python
+    # install python
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get full-upgrade -y; \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -13,10 +13,9 @@ RUN set -eux; \
     tzdata; \
     DEBIAN_FRONTEND=noninteractive apt-get remove --purge --auto-remove -y; \
     rm -rf /var/lib/apt/lists/*; \
-# install mlflow
-    pip install --no-cache mlflow==$VERSION; \
-# create manifest for security scan
-    mkdir -p /usr/share/rocks; \
+    # install mlflow
+    pip install --no-cache mlflow==$VERSION
+RUN mkdir -p /usr/share/rocks; \
     (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && dpkg-query -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) > /usr/share/rocks/dpkg.query
 
 EXPOSE 5000

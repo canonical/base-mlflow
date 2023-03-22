@@ -1,0 +1,94 @@
+name: base-mflow
+summary: Base MLflow Image
+description: |
+  This is base MLflow image. MLflow is a platform to streamline machine learning development, including tracking experiments, packaging code into reproducible runs, and sharing and deploying models. MLflow offers a set of lightweight APIs that can be used with any existing machine learning application or library (TensorFlow, PyTorch, XGBoost, etc), wherever you currently run ML code (e.g. in notebooks, standalone applications or the cloud). Read more on the [mlflow website](https://mlflow.org/).
+
+version: "v2.1.1"
+license: Apache-2.0
+base: ubuntu:22.04
+cmd: ["python3"]
+platforms:
+  amd64:
+
+entrypoint: ["/bin/pebble", "run", "-v"]
+
+parts:
+  base-mlflow:
+    plugin: dump
+    source: https://github.com/mlflow/mlflow
+    source-type: git
+    source-tag: v2.1.1
+    build-snaps:
+      - node/16/stable
+    build-packages:
+      - apt
+      - bash
+      - curl
+      - cmake
+      - protobuf-compiler
+      - python3.10
+      - python3-pip
+      - default-libmysqlclient-dev
+      - build-essential
+      - openjdk-11-jre-headless
+      - nodejs
+      - npm
+    build-environment:
+      - DEBIAN_FRONTEND: noninteractive
+      - TZ: UTC
+    stage-packages:
+      - bash # this is for debugging only, should be removed for production
+      - python3.10
+      - python3-pip
+      - tzdata
+    override-build: |
+      set -eux
+
+      cd $CRAFT_PART_SRC
+
+      # update Ubuntu
+      apt-get update && apt-get full-upgrade -y
+
+      # install required python packages
+      pip install -r requirements/dev-requirements.txt --no-cache-dir
+
+      # install mlflow in editable form
+      pip install --no-cache-dir -e .
+
+      # build MLflow UI
+      curl -sL https://deb.nodesource.com/setup_16.x | bash - 
+      npm install --global yarn
+      cd mlflow/server/js
+      yarn install
+      yarn build
+
+      # cleanup
+      apt autoremove
+
+      # is this needed???
+      #mkdir -p /usr/share/rocks; \
+      #  (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && dpkg-query -f \
+      #  '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' \
+      #  -W) > /usr/share/rocks/dpkg.query
+
+      # install build artifacts
+      mkdir -p $CRAFT_PART_INSTALL
+      cp -r * $CRAFT_PART_INSTALL 
+
+  default-config:
+    plugin: dump
+    source: rock-files
+    organize:
+      001-default.yaml: var/lib/pebble/default/layers/001-default.yaml
+    stage:
+      - var/lib/pebble/default/layers/001-default.yaml
+
+  non-root-user:
+    plugin: nil
+    after: [default-config]
+    overlay-script: |
+      # Create a user in the $CRAFT_OVERLAY chroot
+      groupadd -R $CRAFT_OVERLAY -g 100001 mlflow
+      useradd -R $CRAFT_OVERLAY -M -r -u 100001 -g mlflow mlflow
+    override-prime: |
+      craftctl default

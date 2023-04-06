@@ -41,6 +41,7 @@ parts:
       - python3.10
       - python3-pip
       - tzdata
+      - npm
     override-build: |
       set -eux
 

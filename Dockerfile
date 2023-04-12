@@ -16,7 +16,10 @@ RUN set -eux; \
     # install mlflow
     pip install --no-cache mlflow==$VERSION; \
     # install boto3
-    pip install --no-cache boto3
+    pip install --no-cache boto3; \
+    # install prometheus exporter
+    pip install --no-cache prometheus-flask-exporter
+
 # to stay consistent with upstream image we separate the dpkg-query to separate layer
 RUN mkdir -p /usr/share/rocks; \
     (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && dpkg-query -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) > /usr/share/rocks/dpkg.query

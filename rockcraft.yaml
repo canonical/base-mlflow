@@ -18,6 +18,7 @@ services:
     override: replace
     command: /usr/bin/python3
     startup: enabled
+    user: ubuntu
 
 parts:
   security-team-requirement:
@@ -41,7 +42,7 @@ parts:
     after: [mlflow]
     overlay-script: |
       # Create a user in the $CRAFT_OVERLAY chroot
-      groupadd -R $CRAFT_OVERLAY -g 1000 mlflow
-      useradd -R $CRAFT_OVERLAY -M -r -u 1000 -g mlflow mlflow
+      groupadd -R $CRAFT_OVERLAY -g 1000 ubuntu
+      useradd -R $CRAFT_OVERLAY -M -r -u 1000 -g ubuntu ubuntu
     override-prime: |
       craftctl default

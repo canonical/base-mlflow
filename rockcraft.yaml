@@ -14,7 +14,7 @@ platforms:
   amd64:
 
 services:
-  base-mlflow:
+  mlflow-server:
     override: replace
     command: /usr/bin/python3
     startup: enabled
@@ -36,6 +36,8 @@ parts:
     - tzdata
     python-packages:
     - mlflow==2.1.1
+    - boto3
+    - prometheus-flask-exporter
   
   non-root-user:
     plugin: nil

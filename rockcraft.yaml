@@ -7,7 +7,7 @@ description: |
   learning application or library (TensorFlow, PyTorch, XGBoost, etc), wherever you currently run ML code 
   (e.g. in notebooks, standalone applications or the cloud). Read more on the [mlflow website](https://mlflow.org/).
 
-version: "v2.1.1"
+version: "v2.1.1_22.04_1"
 license: Apache-2.0
 base: ubuntu:22.04
 platforms:

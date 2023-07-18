@@ -14,11 +14,10 @@ RUN set -eux; \
     DEBIAN_FRONTEND=noninteractive apt-get remove --purge --auto-remove -y; \
     rm -rf /var/lib/apt/lists/*; \
     # install mlflow
-    pip install --no-cache mlflow==$VERSION; \
-    # install boto3
-    pip install --no-cache boto3; \
-    # install prometheus exporter
-    pip install --no-cache prometheus-flask-exporter
+    pip install --no-cache mlflow==$VERSION
+
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt --no-cache
 
 # to stay consistent with upstream image we separate the dpkg-query to separate layer
 RUN mkdir -p /usr/share/rocks; \

@@ -9,16 +9,17 @@ description: |
 
 version: "v2.1.1_22.04_1"
 license: Apache-2.0
-base: ubuntu:22.04
+build-base: ubuntu:22.04
+base: bare
 platforms:
   amd64:
+run-user: _daemon_
 
 services:
   mlflow-server:
     override: replace
     command: /usr/bin/python3
     startup: enabled
-    user: ubuntu
 
 parts:
   security-team-requirement:
@@ -36,15 +37,5 @@ parts:
     - tzdata
     python-packages:
     - mlflow==2.1.1
-    - boto3
-    - prometheus-flask-exporter
-  
-  non-root-user:
-    plugin: nil
-    after: [mlflow]
-    overlay-script: |
-      # Create a user in the $CRAFT_OVERLAY chroot
-      groupadd -R $CRAFT_OVERLAY -g 1001 ubuntu
-      useradd -R $CRAFT_OVERLAY -M -r -u 1001 -g ubuntu ubuntu
-    override-prime: |
-      craftctl default
+    python-requirements:
+    - requirements.txt

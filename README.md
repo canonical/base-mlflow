@@ -8,9 +8,9 @@ You can use this image seamlesly as any other python Docker image by specifying 
 FROM charmed/base-mlflow:latest
 ```
 
-# MLflow ROCK OCI image
+# MLflow rock OCI image
 
-The following tools are required to build ROCK image manually:
+The following tools are required to build rock image manually:
 - `rockcraft' - A tool to create OCI images.
 - `skopeo` - A tool to operate on container images and registries.
 
@@ -20,7 +20,7 @@ sudo snap install rockcraft --classic --edge
 sudo snap install skopeo --edge --devmode
 ```
 
-To build ROCK image manually:
+To build rock image manually:
 ```
 rockcraft pack
 ```

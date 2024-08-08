@@ -44,7 +44,7 @@ mkdir mlruns
 chmod 777 mlruns 
 
 # Run the server with the mounted folder 
-docker run -p 5000:5000 -v ./mlruns:/mlruns --entrypoint=mlflow mlflow:v2.15.0 server --host 0.0.0.0 --backend-store-uri file:///mlruns
+docker run -p 5000:5000 -v ./mlruns:/mlruns --entrypoint=mlflow mlflow:v2.15.1 server --host 0.0.0.0 --backend-store-uri file:///mlruns
 ```
 
 Then you can visit [http://localhost:5000/](http://localhost:5000/).

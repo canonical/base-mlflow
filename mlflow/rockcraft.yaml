@@ -1,5 +1,5 @@
 name: mlflow
-version: "v2.15.0"
+version: "v2.15.1"
 summary: Base MLflow Image
 description: |
   This is base MLflow Rock image. MLflow is a platform to streamline machine learning development, 
@@ -34,7 +34,5 @@ parts:
     - python3.10
     - python3.10-venv
     - tzdata
-    python-packages:
-    - mlflow==2.15.0
     python-requirements:
     - requirements.txt

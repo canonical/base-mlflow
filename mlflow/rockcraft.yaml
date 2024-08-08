@@ -1,4 +1,5 @@
-name: base-mflow
+name: mlflow
+version: "v2.15.1"
 summary: Base MLflow Image
 description: |
   This is base MLflow Rock image. MLflow is a platform to streamline machine learning development, 
@@ -6,11 +7,8 @@ description: |
   models. MLflow offers a set of lightweight APIs that can be used with any existing machine 
   learning application or library (TensorFlow, PyTorch, XGBoost, etc), wherever you currently run ML code 
   (e.g. in notebooks, standalone applications or the cloud). Read more on the [mlflow website](https://mlflow.org/).
-
-version: "v2.1.1_22.04_1"
 license: Apache-2.0
-build-base: ubuntu:22.04
-base: bare
+base: ubuntu@22.04
 platforms:
   amd64:
 run-user: _daemon_
@@ -18,6 +16,7 @@ run-user: _daemon_
 services:
   mlflow-server:
     override: replace
+    summary: "mlflow server service"
     command: /usr/bin/python3
     startup: enabled
 
@@ -26,9 +25,7 @@ parts:
     plugin: nil
     override-build: |
       mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
-      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && \
-        dpkg-query --root=${CRAFT_PROJECT_DIR}/../bundles/ubuntu-22.04/rootfs/ -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) \
-        > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
+      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && dpkg-query -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
 
   mlflow:
     source: .
@@ -37,7 +34,5 @@ parts:
     - python3.10
     - python3.10-venv
     - tzdata
-    python-packages:
-    - mlflow==2.1.1
     python-requirements:
     - requirements.txt

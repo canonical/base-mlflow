@@ -1,39 +1,50 @@
 
 # Ubuntu 22.04 based MLflow image v2.15.0
-This repository regularly builds a new [MLflow](https://github.com/mlflow/mlflow) image based on LTS Ubuntu 22.04. After the new image is built, the CI runs simple tests against the image and runs the [trivy](https://github.com/aquasecurity/trivy) vulnerability scan. 
+[![Build & Scan](https://github.com/canonical/base-mlflow/actions/workflows/on_pull_request.yaml/badge.svg)](https://github.com/canonical/base-mlflow/actions/workflows/on_pull_request.yaml)
+[![Publish](https://github.com/canonical/base-mlflow/actions/workflows/on_push.yaml/badge.svg)](https://github.com/canonical/base-mlflow/actions/workflows/on_push.yaml)
 
-The image is currently published [here](https://hub.docker.com/r/charmedkubeflow/mlflow)
-You can use this image seamlessly as any other Python Docker image by specifying it as a base with:
+This repository contains source code for Canonical's MLFlow Docker file and rock image.
+
+The rock image is currently published [here](https://hub.docker.com/r/charmedkubeflow/mlflow). You can use this image seamlessly as any other Python Docker image by specifying it as a base with:
 
 ```dockerfile
 FROM charmedkubeflow/mlflow:latest
 ```
 
-# MLflow ROCK OCI image
+# MLflow rock OCI image
 
-The following tools are required to build the ROCK image manually:
+The following tools are required to build the rock image manually:
 - `rockcraft` - A tool to create OCI images.
 - `skopeo` - A tool to operate on container images and registries.
+- `tox` - A tool to run tests in virtual environments. The tool is a Python package, so a Python interpreter with the `pip` package tool is needed (tested with python3.10, python3.8).
 
-To install tools:
+To install the tools:
 ```bash
 sudo snap install rockcraft --classic --edge
 sudo snap install skopeo --edge --devmode
+pip install tox
 ```
 
-To build the ROCK image manually:
+To build the rock image manually:
 ```bash
-rockcraft pack
+cd mlflow 
+tox -e pack
 ```
 
-To copy the resulting image `base-mlflow_v2.15.0_amd64.rock` to Docker:
+To use the resulting rock in Docker:
 ```bash
-sudo skopeo --insecure-policy copy oci-archive:base-mlflow_v2.15.0_amd64.rock docker-daemon:base-mlflow_v2.15.0_amd64.rock:rock
+tox -e export-to-docker
 ```
 
-To test the resulting image after copying to Docker using `skopeo`, run it:
+To test the resulting image after copying to Docker, run it:
 ```bash
-docker run -p 5000:5000 --entrypoint=mlflow base-mlflow_v2.15.0_amd64.rock:rock server --host 0.0.0.0
+# Create a local folder to be mounted to the container 
+mkdir mlruns
+# Change permissions on the folder
+chmod 755 mlruns 
+
+# Run the server with the mounted folder 
+docker run -p 5000:5000 -v ./mlruns:/mlruns --entrypoint=mlflow mlflow:v2.15.0 server --host 0.0.0.0 --backend-store-uri file:///mlruns
 ```
 
-Then you can visit http://localhost:5000/
+Then you can visit [http://localhost:5000/](http://localhost:5000/).

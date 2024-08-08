@@ -1,4 +1,4 @@
-name: base-mflow
+name: mflow
 version: "v2.15.0"
 summary: Base MLflow Image
 description: |

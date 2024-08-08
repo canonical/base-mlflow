@@ -1,15 +1,11 @@
 
-# Ubuntu 22.04 based MLflow image v2.15.0
+# Ubuntu 22.04 based MLflow image v2.15.1
 [![On pull request](https://github.com/canonical/base-mlflow/actions/workflows/on_pull_request.yaml/badge.svg)](https://github.com/canonical/base-mlflow/actions/workflows/on_pull_request.yaml)
 [![On push](https://github.com/canonical/base-mlflow/actions/workflows/on_push.yaml/badge.svg)](https://github.com/canonical/base-mlflow/actions/workflows/on_push.yaml)
 
-This repository contains source code for Canonical's MLFlow Docker file and rock image.
+This repository contains source code for Canonical's MLFlow rock image.
 
-The rock image is currently published [here](https://hub.docker.com/r/charmedkubeflow/mlflow). You can use this image seamlessly as any other Python Docker image by specifying it as a base with:
-
-```dockerfile
-FROM charmedkubeflow/mlflow:latest
-```
+The rock image is currently published [here](https://hub.docker.com/r/charmedkubeflow/mlflow).
 
 # MLflow rock OCI image
 

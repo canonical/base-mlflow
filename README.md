@@ -41,7 +41,7 @@ To test the resulting image after copying to Docker, run it:
 # Create a local folder to be mounted to the container 
 mkdir mlruns
 # Change permissions on the folder
-chmod 755 mlruns 
+chmod 777 mlruns 
 
 # Run the server with the mounted folder 
 docker run -p 5000:5000 -v ./mlruns:/mlruns --entrypoint=mlflow mlflow:v2.15.0 server --host 0.0.0.0 --backend-store-uri file:///mlruns

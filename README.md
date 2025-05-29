@@ -1,5 +1,5 @@
 
-#  MLflow image
+# MLflow image
 [![On pull request](https://github.com/canonical/base-mlflow/actions/workflows/on_pull_request.yaml/badge.svg)](https://github.com/canonical/base-mlflow/actions/workflows/on_pull_request.yaml)
 [![On push](https://github.com/canonical/base-mlflow/actions/workflows/on_push.yaml/badge.svg)](https://github.com/canonical/base-mlflow/actions/workflows/on_push.yaml)
 

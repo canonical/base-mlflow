@@ -1,5 +1,5 @@
 name: mlflow
-version: "v2.15.1"
+version: "v2.22.0"
 summary: Base MLflow Image
 description: |
   This is base MLflow Rock image. MLflow is a platform to streamline machine learning development, 
@@ -8,7 +8,7 @@ description: |
   learning application or library (TensorFlow, PyTorch, XGBoost, etc), wherever you currently run ML code 
   (e.g. in notebooks, standalone applications or the cloud). Read more on the [mlflow website](https://mlflow.org/).
 license: Apache-2.0
-base: ubuntu@22.04
+base: ubuntu@24.04
 platforms:
   amd64:
 run-user: _daemon_
@@ -21,18 +21,11 @@ services:
     startup: enabled
 
 parts:
-  security-team-requirement:
-    plugin: nil
-    override-build: |
-      mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
-      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && dpkg-query -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
-
   mlflow:
     source: .
     plugin: python
     stage-packages:
-    - python3.10
-    - python3.10-venv
+    - python3.12-venv
     - tzdata
     python-requirements:
     - requirements.txt

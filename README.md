@@ -1,5 +1,5 @@
 
-# Ubuntu 22.04 based MLflow image v2.15.1
+#  MLflow image
 [![On pull request](https://github.com/canonical/base-mlflow/actions/workflows/on_pull_request.yaml/badge.svg)](https://github.com/canonical/base-mlflow/actions/workflows/on_pull_request.yaml)
 [![On push](https://github.com/canonical/base-mlflow/actions/workflows/on_push.yaml/badge.svg)](https://github.com/canonical/base-mlflow/actions/workflows/on_push.yaml)
 
@@ -9,15 +9,15 @@ The rock image is currently published [here](https://hub.docker.com/r/charmedkub
 
 # MLflow rock OCI image
 
-The following tools are required to build the rock image manually:
+The following tools are required to build and test the rock image:
 - `rockcraft` - A tool to create OCI images.
-- `skopeo` - A tool to operate on container images and registries.
-- `tox` - A tool to run tests in virtual environments. The tool is a Python package, so a Python interpreter with the `pip` package tool is needed (tested with python3.10, python3.8).
+- `yq` - Command-line YAML processor.
+- `tox` - A tool to create and set up environments to run commands in them.
 
 To install the tools:
 ```bash
-sudo snap install rockcraft --classic --edge
-sudo snap install skopeo --edge --devmode
+sudo snap install rockcraft --classic
+sudo snap install yq
 pip install tox
 ```
 
@@ -30,6 +30,8 @@ tox -e pack
 To use the resulting rock in Docker:
 ```bash
 tox -e export-to-docker
+# Find the proper tag of your image
+docker images
 ```
 
 To test the resulting image after copying to Docker, run it:
@@ -40,7 +42,7 @@ mkdir mlruns
 chmod 777 mlruns 
 
 # Run the server with the mounted folder 
-docker run -p 5000:5000 -v ./mlruns:/mlruns --entrypoint=mlflow mlflow:v2.15.1 server --host 0.0.0.0 --backend-store-uri file:///mlruns
+docker run -p 5000:5000 -v ./mlruns:/mlruns --entrypoint=mlflow mlflow:<tag> --host 0.0.0.0 --backend-store-uri file:///mlruns
 ```
 
-Then you can visit [http://localhost:5000/](http://localhost:5000/).
+Then you can visit [http://localhost:5000/](http://localhost:5000/) to access the main MLflow dashboard.

@@ -1,5 +1,5 @@
 name: mlflow
-version: "v2.22.0"
+version: "2.22.0"
 summary: Base MLflow Image
 description: |
   This is base MLflow Rock image. MLflow is a platform to streamline machine learning development, 
@@ -25,7 +25,8 @@ parts:
     source: .
     plugin: python
     stage-packages:
-    - python3.12-venv
+    # This pulls the default Python interpreter for Ubuntu 24.04 -> 3.12
+    - python3-venv
     - tzdata
     python-requirements:
     - requirements.txt

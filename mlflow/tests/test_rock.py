@@ -15,7 +15,7 @@ def test_rock():
     rock_version = check_rock.get_version()
     LOCAL_ROCK_IMAGE = f"{rock_image}:{rock_version}"
 
-    # assert we have expected mlflow library installed
+    # assert we have the mlflow executable installed
     result = subprocess.run(
         [
             "docker",
@@ -24,13 +24,29 @@ def test_rock():
             "/bin/bash",
             LOCAL_ROCK_IMAGE,
             "-c",
-            "pip list | grep -E '^mlflow\\s+2\\.15\\.[0-9]+$'"
+            "ls -la /usr/bin/mlflow"
         ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
         check=True,
     )
+
+    # assert we have the correct version is installed
+    result = subprocess.run(
+        [
+            "docker",
+            "run",
+            "--entrypoint",
+            "/bin/bash",
+            LOCAL_ROCK_IMAGE,
+            "-c",
+            "/usr/bin/mlflow --version"
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=True,
+    )
+    assert rock_version in result.stdout
     
-    # Check if the grep command found the desired package version
-    assert "mlflow" in result.stdout, "mlflow version 2.15.x is not installed"

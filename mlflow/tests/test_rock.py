@@ -31,4 +31,22 @@ def test_rock():
         text=True,
         check=True,
     )
+
+    # assert we have the correct version is installed
+    result = subprocess.run(
+        [
+            "docker",
+            "run",
+            "--entrypoint",
+            "/bin/bash",
+            LOCAL_ROCK_IMAGE,
+            "-c",
+            "/usr/bin/mlflow --version"
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=True,
+    )
+    assert rock_version in result.stdout
     

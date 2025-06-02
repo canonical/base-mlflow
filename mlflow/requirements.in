@@ -1,1 +1,5 @@
+boto3
+cryptography
 mlflow==2.22.0
+prometheus-flask-exporter
+pymysql
